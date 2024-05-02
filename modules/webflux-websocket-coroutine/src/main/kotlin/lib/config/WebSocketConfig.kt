@@ -1,7 +1,6 @@
 package app.bluelips.lib.config
 
 import app.bluelips.lib.annotation.WebSocketHandleMapping
-import app.bluelips.lib.handler.TestHandler
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,6 +17,7 @@ class WebSocketConfig(
     }
 
     fun pathHandlerMap(): Map<String, Any> {
+
         return applicationContext.getBeanNamesForAnnotation(WebSocketHandleMapping::class.java).associate {
             applicationContext.getBean(it).run {
                 javaClass.getAnnotation(WebSocketHandleMapping::class.java).path to this
