@@ -72,9 +72,9 @@ publishing.publications {
         pom {
             name = "webflux-websocket-coroutine"
             description = "Webflux WebSocket Coroutine"
-            url = "https://github.com/bluelips-app/spring-webflux-websocket"
+            url = "https://github.com/bluelips-app/webflux-websocket-coroutine"
             issueManagement {
-                url = "https://github.com/bluelips-app/spring-webflux-websocket/issues"
+                url = "https://github.com/bluelips-app/webflux-websocket-coroutine/issues"
             }
             developers {
                 developer {
@@ -84,13 +84,13 @@ publishing.publications {
                 }
             }
             scm {
-                url = "https://github.com/bluelips-app/spring-webflux-websocket"
-                connection = "scm:git:github.com/bluelips-app/spring-webflux-websocket.git"
+                url = "https://github.com/bluelips-app/webflux-websocket-coroutine"
+                connection = "scm:git:github.com/bluelips-app/webflux-websocket-coroutine.git"
             }
             licenses {
                 license {
                     name = "MIT License"
-                    url = "https://github.com/bluelips-app/spring-webflux-websocket/licenses"
+                    url = "https://github.com/bluelips-app/webflux-websocket-coroutine/blob/main/LICENSE"
                 }
             }
         }
