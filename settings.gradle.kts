@@ -4,3 +4,5 @@ plugins {
 rootProject.name = "lib"
 include("modules:webflux-websocket-coroutine")
 findProject(":modules:webflux-websocket-coroutine")?.name = "webflux-websocket-coroutine"
+include("modules:webflux-websocket-coroutine-extension")
+findProject(":modules:webflux-websocket-coroutine-extension")?.name = "webflux-websocket-coroutine-extension"
