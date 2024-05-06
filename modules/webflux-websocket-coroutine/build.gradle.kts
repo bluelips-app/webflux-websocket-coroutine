@@ -3,12 +3,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "3.1.11"
     id("io.spring.dependency-management") version "1.1.4"
+    `maven-publish`
+    signing
+    id("com.gradleup.nmcp").version("0.0.7")
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
 }
 
-group = "app.bluelips"
-version = "0.0.1-SNAPSHOT"
+val libVersion = "0.0.1"
+val artifactName = "webflux-websocket-coroutine"
+val groupName = "app.bluelips.libs"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -41,4 +45,67 @@ tasks.withType<Test> {
 
 tasks.bootBuildImage {
     builder.set("paketobuildpacks/builder-jammy-base:latest")
+}
+
+
+val javadocJar = tasks.register("javadocJar", Jar::class) {
+    archiveClassifier = "javadoc"
+    sourceSets["main"].allSource
+    group = "deploy"
+}
+
+val sourcesJar = tasks.register("sourcesJar", Jar::class) {
+    archiveClassifier = "sources"
+    sourceSets["main"].allSource
+    group = "deploy"
+}
+
+val publishing = project.extensions.getByType(PublishingExtension::class)
+
+publishing.publications {
+    create<MavenPublication>("maven") {
+        artifact(javadocJar)
+        artifact(sourcesJar)
+        groupId = groupName
+        artifactId = artifactName
+        version = libVersion
+        pom {
+            name = "webflux-websocket-coroutine"
+            description = "Webflux WebSocket Coroutine"
+            url = "https://github.com/bluelips-app/spring-webflux-websocket"
+            issueManagement {
+                url = "https://github.com/bluelips-app/spring-webflux-websocket/issues"
+            }
+            developers {
+                developer {
+                    id = "bo.kang"
+                    email = "ebfks0301@gmail.com"
+                    name = "Bo Chan Kang"
+                }
+            }
+            scm {
+                url = "https://github.com/bluelips-app/spring-webflux-websocket"
+                connection = "scm:git:github.com/bluelips-app/spring-webflux-websocket.git"
+            }
+            licenses {
+                license {
+                    name = "MIT License"
+                    url = "https://github.com/bluelips-app/spring-webflux-websocket/licenses"
+                }
+            }
+        }
+    }
+    project.extensions.getByType(SigningExtension::class.java).apply {
+        useGpgCmd()
+        sign(publishing.publications)
+    }
+}
+
+nmcp {
+    publish("maven") {
+        username = System.getenv("MAVEN_CENTRAL_USERNAME")
+        password = System.getenv("MAVEN_CENTRAL_PASSWORD")
+        publicationType = "USER_MANAGED"
+        version = libVersion
+    }
 }
