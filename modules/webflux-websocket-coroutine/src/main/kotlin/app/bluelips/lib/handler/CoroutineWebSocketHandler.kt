@@ -7,19 +7,19 @@ import org.springframework.web.reactive.socket.WebSocketMessage
 import org.springframework.web.reactive.socket.WebSocketSession
 import reactor.core.publisher.Mono
 
-abstract class AbstractWebSocketHandler : WebSocketHandler {
+abstract class CoroutineWebSocketHandler : WebSocketHandler {
     private fun receiveMessage(session: WebSocketSession): Mono<Void> {
         return mono {
             session.receive().map {
                 it.retain()
             }.asFlow()
                 .collect {
-                    receiveMessageHandle(session, it)
+                    coroutineHandle(session, it)
                 }
         }.then()
     }
 
-    abstract fun receiveMessageHandle(session: WebSocketSession, message: WebSocketMessage)
+    abstract fun coroutineHandle(session: WebSocketSession, message: WebSocketMessage)
 
     override fun handle(session: WebSocketSession): Mono<Void> {
         return receiveMessage(session)
