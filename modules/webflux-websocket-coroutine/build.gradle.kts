@@ -3,14 +3,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "3.1.11"
     id("io.spring.dependency-management") version "1.1.4"
-    `maven-publish`
     signing
     id("com.gradleup.nmcp").version("0.0.7")
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
+    `maven-publish`
 }
 
-val libVersion = "0.0.1"
+val libVersion = "0.0.3"
 val artifactName = "webflux-websocket-coroutine"
 val groupName = "app.bluelips.libs"
 
@@ -60,12 +60,25 @@ val sourcesJar = tasks.register("sourcesJar", Jar::class) {
     group = "deploy"
 }
 
+val deployJar = tasks.register("deployJar", Jar::class) {
+
+    archiveClassifier = "sources"
+    sourceSets["main"].allSource
+    group = "deploy"
+}
+
+tasks.jar{
+    archiveClassifier = ""
+}
+
 val publishing = project.extensions.getByType(PublishingExtension::class)
 
+
 publishing.publications {
-    create<MavenPublication>("maven") {
+    create<MavenPublication>("webSocket") {
+        artifact(tasks.jar)
+        artifact(tasks.kotlinSourcesJar)
         artifact(javadocJar)
-        artifact(sourcesJar)
         groupId = groupName
         artifactId = artifactName
         version = libVersion
@@ -102,7 +115,7 @@ publishing.publications {
 }
 
 nmcp {
-    publish("maven") {
+    publish("webSocket") {
         username = System.getenv("MAVEN_CENTRAL_USERNAME")
         password = System.getenv("MAVEN_CENTRAL_PASSWORD")
         publicationType = "USER_MANAGED"
