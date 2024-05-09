@@ -19,7 +19,7 @@ abstract class CoroutineWebSocketHandler : WebSocketHandler {
         }.then()
     }
 
-    abstract fun coroutineHandle(session: WebSocketSession, message: WebSocketMessage)
+    abstract suspend fun coroutineHandle(session: WebSocketSession, message: WebSocketMessage)
 
     override fun handle(session: WebSocketSession): Mono<Void> {
         return receiveMessage(session)
