@@ -1,4 +1,4 @@
-package app.bluelips.lib.util
+package app.boboc.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
