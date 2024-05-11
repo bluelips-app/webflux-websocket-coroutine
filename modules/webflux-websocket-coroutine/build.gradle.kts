@@ -12,7 +12,7 @@ plugins {
 
 val libVersion = "0.0.3"
 val artifactName = "webflux-websocket-coroutine"
-val groupName = "app.bluelips.libs"
+val groupName = "app.boboc"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -85,9 +85,9 @@ publishing.publications {
         pom {
             name = "webflux-websocket-coroutine"
             description = "Webflux WebSocket Coroutine"
-            url = "https://github.com/bluelips-app/webflux-websocket-coroutine"
+            url = "https://github.com/boboc-app/webflux-websocket-coroutine"
             issueManagement {
-                url = "https://github.com/bluelips-app/webflux-websocket-coroutine/issues"
+                url = "https://github.com/boboc-app/webflux-websocket-coroutine/issues"
             }
             developers {
                 developer {
@@ -97,13 +97,13 @@ publishing.publications {
                 }
             }
             scm {
-                url = "https://github.com/bluelips-app/webflux-websocket-coroutine"
-                connection = "scm:git:github.com/bluelips-app/webflux-websocket-coroutine.git"
+                url = "https://github.com/boboc-app/webflux-websocket-coroutine"
+                connection = "scm:git:github.com/boboc-app/webflux-websocket-coroutine.git"
             }
             licenses {
                 license {
                     name = "MIT License"
-                    url = "https://github.com/bluelips-app/webflux-websocket-coroutine/blob/main/LICENSE"
+                    url = "https://github.com/boboc-app/webflux-websocket-coroutine/blob/main/LICENSE"
                 }
             }
         }
