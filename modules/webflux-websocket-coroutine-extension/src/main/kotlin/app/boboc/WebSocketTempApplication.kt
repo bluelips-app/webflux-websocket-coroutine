@@ -1,4 +1,4 @@
-package app.bluelips.lib
+package app.boboc
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
