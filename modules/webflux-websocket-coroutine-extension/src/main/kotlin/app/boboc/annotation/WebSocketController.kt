@@ -1,4 +1,4 @@
-package app.bluelips.lib.annotation
+package app.boboc.annotation
 
 import org.springframework.stereotype.Component
 

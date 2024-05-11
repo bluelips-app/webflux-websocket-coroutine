@@ -1,17 +1,14 @@
-package app.bluelips.lib.config
+package app.boboc.config
 
-import app.bluelips.lib.annotation.WebSocketController
-import app.bluelips.lib.annotation.WebSocketHandlerMapping
-import app.bluelips.lib.handler.DefaultWebSocketHandler
-import org.springframework.beans.factory.getBean
+import app.boboc.annotation.WebSocketController
+import app.boboc.annotation.WebSocketHandlerMapping
+import app.boboc.handler.DefaultWebSocketHandler
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.HandlerMapping
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping
-import org.springframework.web.reactive.socket.WebSocketHandler
 import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberFunctions
 
 @Configuration
