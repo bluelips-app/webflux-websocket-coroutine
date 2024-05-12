@@ -7,7 +7,7 @@ import kotlinx.coroutines.reactor.mono
 import org.springframework.web.reactive.socket.WebSocketSession
 
 object WebSocketSessionUtil {
-    private val objectMapper = ObjectMapper().registerKotlinModule()
+    val objectMapper = ObjectMapper().registerKotlinModule()
 
     suspend fun WebSocketSession.sendMessage(message: Any?) {
         val session = this

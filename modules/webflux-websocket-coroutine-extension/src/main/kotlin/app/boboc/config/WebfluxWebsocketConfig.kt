@@ -16,7 +16,7 @@ class WebfluxWebsocketConfig(
     private val applicationContext: ApplicationContext,
 ) {
     @Bean
-    fun handlerMapping(): HandlerMapping {
+    fun websocketHandlerMapping(): HandlerMapping {
         return SimpleUrlHandlerMapping(pathHandlerMap(), -1)
     }
 
@@ -26,11 +26,11 @@ class WebfluxWebsocketConfig(
             .forEach {
                 applicationContext.getBean(it)
                     .run {
-                        this::class.memberFunctions.mapNotNull {  beanMethod ->
-                            beanMethod.findAnnotation<WebSocketHandlerMapping>()?.path
+                        this::class.memberFunctions.forEach { beanMethod ->
+                            beanMethod.findAnnotation<WebSocketHandlerMapping>()?.let { ann ->
+                                handlerMap[ann.path] = DefaultWebSocketHandler(this, beanMethod)
+                            }
                         }
-                    }.forEach { path ->
-                        handlerMap[path] = DefaultWebSocketHandler()
                     }
             }
         return handlerMap
