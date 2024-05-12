@@ -11,7 +11,7 @@ plugins {
 
 val libVersion = "0.0.4"
 val artifactName = "webflux-websocket-coroutine-extension"
-val groupName = "app.bluelips.libs"
+val groupName = "app.boboc"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
