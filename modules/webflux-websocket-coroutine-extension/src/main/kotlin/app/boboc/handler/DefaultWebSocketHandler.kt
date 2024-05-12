@@ -6,7 +6,7 @@ import org.springframework.web.reactive.socket.WebSocketMessage
 import org.springframework.web.reactive.socket.WebSocketSession
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
-import kotlin.reflect.KType
+import kotlin.reflect.KParameter
 import kotlin.reflect.full.starProjectedType
 
 class DefaultWebSocketHandler(
@@ -14,29 +14,45 @@ class DefaultWebSocketHandler(
     private val beanMethod: KFunction<*>
 ) : CoroutineWebSocketHandler() {
     override suspend fun coroutineHandle(session: WebSocketSession, message: WebSocketMessage) {
-        beanMethod.parameters.map {
-            if (it.name == null) {
-                it to controllerBean
-            } else if (it.type == session.kotlinType) {
-                it to session
-            } else if (it.type == message.kotlinType) {
-                it to message
-            } else {
-                val clazz = it.type.classifier!! as KClass<*>
-                it to (WebSocketSessionUtil.objectMapper.readValue(message.payloadAsText, clazz.java))
-
+        parseRequest(session, message)
+            .run {
+                beanMethod.callBy(this)
+            }.also {
+                if (!beanMethod.isReturnUnit())
+                    session.sendMessage(it)
             }
-        }.run {
-            beanMethod.callBy(this.associate { it.first to it.second })
-        }.also {
-            session.sendMessage(it)
+    }
+
+    private suspend fun parseRequest(session: WebSocketSession, message: WebSocketMessage): Map<KParameter, Any> {
+        return beanMethod.parameters.map {
+            it.parseParameter(session, message)
+        }.associate { it.first to it.second }
+    }
+
+    private fun KParameter.parseParameter(session: WebSocketSession, message: WebSocketMessage): Pair<KParameter, Any> {
+        return if (this.name == null) {
+            this to controllerBean
+        } else if (this.isSession()) {
+            this to session
+        } else if (this.isMessage()) {
+            this to message
+        } else {
+            (this.type.classifier!! as KClass<*>).let { clazz ->
+                this to (WebSocketSessionUtil.objectMapper.readValue(message.payloadAsText, clazz.java))
+            }
         }
     }
 
+    private fun KParameter.isSession(): Boolean {
+        return this.type == WebSocketSession::class.starProjectedType
+    }
 
-    private val WebSocketSession.kotlinType: KType
-        get() = WebSocketSession::class.starProjectedType
+    private fun KParameter.isMessage(): Boolean {
+        return this.type == WebSocketMessage::class.starProjectedType
+    }
 
-    private val WebSocketMessage.kotlinType: KType
-        get() = WebSocketMessage::class.starProjectedType
+    private fun KFunction<*>.isReturnUnit(): Boolean {
+        return this.returnType == Unit::class.starProjectedType
+    }
+
 }
