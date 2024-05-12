@@ -9,7 +9,7 @@ plugins {
     kotlin("plugin.spring") version "1.8.22"
 }
 
-val libVersion = "0.0.1"
+val libVersion = "0.0.4"
 val artifactName = "webflux-websocket-coroutine-extension"
 val groupName = "app.bluelips.libs"
 
@@ -38,3 +38,79 @@ tasks.test {
 kotlin {
     jvmToolchain(17)
 }
+
+
+val javadocJar = tasks.register("javadocJar", Jar::class) {
+    archiveClassifier = "javadoc"
+    sourceSets["main"].allSource
+    group = "deploy"
+}
+
+val sourcesJar = tasks.register("sourcesJar", Jar::class) {
+    archiveClassifier = "sources"
+    sourceSets["main"].allSource
+    group = "deploy"
+}
+
+val deployJar = tasks.register("deployJar", Jar::class) {
+    archiveClassifier = "sources"
+    sourceSets["main"].allSource
+    group = "deploy"
+}
+
+tasks.jar{
+    archiveClassifier = ""
+}
+
+val publishing = project.extensions.getByType(PublishingExtension::class)
+
+
+publishing.publications {
+    create<MavenPublication>("webSocketExt") {
+        artifact(tasks.jar)
+        artifact(tasks.kotlinSourcesJar)
+        artifact(javadocJar)
+        groupId = groupName
+        artifactId = artifactName
+        version = libVersion
+        pom {
+            name = "webflux-websocket-coroutine-extension"
+            description = "Webflux WebSocket Coroutine Extension"
+            url = "https://github.com/boboc-app/webflux-websocket-coroutine"
+            issueManagement {
+                url = "https://github.com/boboc-app/webflux-websocket-coroutine/issues"
+            }
+            developers {
+                developer {
+                    id = "bo.kang"
+                    email = "ebfks0301@gmail.com"
+                    name = "Bo Chan Kang"
+                }
+            }
+            scm {
+                url = "https://github.com/boboc-app/webflux-websocket-coroutine"
+                connection = "scm:git:github.com/boboc-app/webflux-websocket-coroutine.git"
+            }
+            licenses {
+                license {
+                    name = "MIT License"
+                    url = "https://github.com/boboc-app/webflux-websocket-coroutine/blob/main/LICENSE"
+                }
+            }
+        }
+    }
+    project.extensions.getByType(SigningExtension::class.java).apply {
+        useGpgCmd()
+        sign(publishing.publications)
+    }
+}
+
+nmcp {
+    publish("webSocketExt") {
+        username = System.getenv("MAVEN_CENTRAL_USERNAME")
+        password = System.getenv("MAVEN_CENTRAL_PASSWORD")
+        publicationType = "USER_MANAGED"
+        version = libVersion
+    }
+}
+
