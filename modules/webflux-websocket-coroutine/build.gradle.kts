@@ -10,7 +10,7 @@ plugins {
     `maven-publish`
 }
 
-val libVersion = "0.0.3"
+val libVersion = "0.0.4"
 val artifactName = "webflux-websocket-coroutine"
 val groupName = "app.boboc"
 
@@ -61,7 +61,6 @@ val sourcesJar = tasks.register("sourcesJar", Jar::class) {
 }
 
 val deployJar = tasks.register("deployJar", Jar::class) {
-
     archiveClassifier = "sources"
     sourceSets["main"].allSource
     group = "deploy"
