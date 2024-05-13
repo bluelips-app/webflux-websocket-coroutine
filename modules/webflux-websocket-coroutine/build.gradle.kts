@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.1.11"
+    id("org.springframework.boot") version app.boboc.Deps.springBootVersion
     id("io.spring.dependency-management") version "1.1.4"
     signing
     id("com.gradleup.nmcp").version("0.0.7")
@@ -10,9 +10,11 @@ plugins {
     `maven-publish`
 }
 
-val libVersion = "0.0.4"
+
+
+val libVersion = app.boboc.Deps.websocketCoroutineVersion
 val artifactName = "webflux-websocket-coroutine"
-val groupName = "app.boboc"
+val groupName = app.boboc.Deps.groupName
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
