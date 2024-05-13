@@ -74,6 +74,11 @@ tasks.jar{
 
 val publishing = project.extensions.getByType(PublishingExtension::class)
 
+project.dependencyManagement{
+    dependencies {
+        dependency("org.springframework.boot:spring-boot-starter-webflux:${app.boboc.Deps.springBootVersion}")
+    }
+}
 
 publishing.publications {
     create<MavenPublication>("webSocket") {

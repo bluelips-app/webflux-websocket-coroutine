@@ -61,6 +61,13 @@ tasks.jar{
     archiveClassifier = ""
 }
 
+project.dependencyManagement{
+    dependencies {
+        dependency("org.springframework.boot:spring-boot-starter-webflux:${app.boboc.Deps.springBootVersion}")
+        dependency("app.boboc:webflux-websocket-coroutine:${libVersion}")
+    }
+}
+
 val publishing = project.extensions.getByType(PublishingExtension::class)
 
 
