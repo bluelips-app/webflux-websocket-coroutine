@@ -73,7 +73,7 @@ val publishing = project.extensions.getByType(PublishingExtension::class)
 
 publishing.publications {
     create<MavenPublication>("webSocketExt") {
-        artifact(tasks.jar)
+        from(project.components["java"])
         artifact(tasks.kotlinSourcesJar)
         artifact(javadocJar)
         groupId = groupName

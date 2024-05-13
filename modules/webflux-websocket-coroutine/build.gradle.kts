@@ -72,22 +72,21 @@ tasks.jar{
     archiveClassifier = ""
 }
 
-val publishing = project.extensions.getByType(PublishingExtension::class)
 
-project.dependencyManagement{
-    dependencies {
-        dependency("org.springframework.boot:spring-boot-starter-webflux:${app.boboc.Deps.springBootVersion}")
-    }
-}
+
+val publishing = project.extensions.getByType(PublishingExtension::class)
 
 publishing.publications {
     create<MavenPublication>("webSocket") {
-        artifact(tasks.jar)
-        artifact(tasks.kotlinSourcesJar)
-        artifact(javadocJar)
         groupId = groupName
         artifactId = artifactName
         version = libVersion
+
+        from(project.components["java"])
+
+        artifact(tasks.kotlinSourcesJar)
+        artifact(javadocJar)
+
         pom {
             name = "webflux-websocket-coroutine"
             description = "Webflux WebSocket Coroutine"
@@ -112,8 +111,12 @@ publishing.publications {
                     url = "https://github.com/boboc-app/webflux-websocket-coroutine/blob/main/LICENSE"
                 }
             }
+
+
         }
+
     }
+
     project.extensions.getByType(SigningExtension::class.java).apply {
         useGpgCmd()
         sign(publishing.publications)
