@@ -63,6 +63,7 @@ val sourcesJar = tasks.register("sourcesJar", Jar::class) {
 }
 
 val deployJar = tasks.register("deployJar", Jar::class) {
+
     archiveClassifier = "sources"
     sourceSets["main"].allSource
     group = "deploy"
