@@ -1,6 +1,5 @@
 package app.boboc.util
 
-import app.boboc.util.WebSocketSessionUtil.sendMessage
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import kotlinx.coroutines.reactor.awaitSingleOrNull

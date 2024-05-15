@@ -1,6 +1,5 @@
-
 plugins {
-    id("org.springframework.boot") version "3.1.11"
+    id("org.springframework.boot") version app.boboc.Deps.springBootVersion
     id("io.spring.dependency-management") version "1.1.4"
     `maven-publish`
     signing
@@ -9,9 +8,9 @@ plugins {
     kotlin("plugin.spring") version "1.8.22"
 }
 
-val libVersion = "0.0.4"
+val libVersion = app.boboc.Deps.websocketCoroutineVersion
 val artifactName = "webflux-websocket-coroutine-extension"
-val groupName = "app.boboc"
+val groupName = app.boboc.Deps.groupName
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -23,10 +22,7 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation(project(":modules:webflux-websocket-coroutine"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
@@ -62,12 +58,19 @@ tasks.jar{
     archiveClassifier = ""
 }
 
+project.dependencyManagement{
+    dependencies {
+        dependency("org.springframework.boot:spring-boot-starter-webflux:${app.boboc.Deps.springBootVersion}")
+        dependency("app.boboc:webflux-websocket-coroutine:${libVersion}")
+    }
+}
+
 val publishing = project.extensions.getByType(PublishingExtension::class)
 
 
 publishing.publications {
     create<MavenPublication>("webSocketExt") {
-        artifact(tasks.jar)
+        from(project.components["java"])
         artifact(tasks.kotlinSourcesJar)
         artifact(javadocJar)
         groupId = groupName

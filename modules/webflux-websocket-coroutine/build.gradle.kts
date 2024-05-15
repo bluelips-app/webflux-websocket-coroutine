@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.1.11"
+    id("org.springframework.boot") version app.boboc.Deps.springBootVersion
     id("io.spring.dependency-management") version "1.1.4"
     signing
     id("com.gradleup.nmcp").version("0.0.7")
@@ -10,9 +10,11 @@ plugins {
     `maven-publish`
 }
 
-val libVersion = "0.0.4"
+
+
+val libVersion = app.boboc.Deps.websocketCoroutineVersion
 val artifactName = "webflux-websocket-coroutine"
-val groupName = "app.boboc"
+val groupName = app.boboc.Deps.groupName
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -25,9 +27,6 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
 }
@@ -61,6 +60,7 @@ val sourcesJar = tasks.register("sourcesJar", Jar::class) {
 }
 
 val deployJar = tasks.register("deployJar", Jar::class) {
+
     archiveClassifier = "sources"
     sourceSets["main"].allSource
     group = "deploy"
@@ -70,17 +70,21 @@ tasks.jar{
     archiveClassifier = ""
 }
 
-val publishing = project.extensions.getByType(PublishingExtension::class)
 
+
+val publishing = project.extensions.getByType(PublishingExtension::class)
 
 publishing.publications {
     create<MavenPublication>("webSocket") {
-        artifact(tasks.jar)
-        artifact(tasks.kotlinSourcesJar)
-        artifact(javadocJar)
         groupId = groupName
         artifactId = artifactName
         version = libVersion
+
+        from(project.components["java"])
+
+        artifact(tasks.kotlinSourcesJar)
+        artifact(javadocJar)
+
         pom {
             name = "webflux-websocket-coroutine"
             description = "Webflux WebSocket Coroutine"
@@ -105,8 +109,12 @@ publishing.publications {
                     url = "https://github.com/boboc-app/webflux-websocket-coroutine/blob/main/LICENSE"
                 }
             }
+
+
         }
+
     }
+
     project.extensions.getByType(SigningExtension::class.java).apply {
         useGpgCmd()
         sign(publishing.publications)
