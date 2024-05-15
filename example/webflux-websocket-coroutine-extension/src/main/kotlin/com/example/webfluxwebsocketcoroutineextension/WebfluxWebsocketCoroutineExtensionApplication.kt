@@ -40,14 +40,14 @@ class WebSocketController{
         return MyMessage(message = "Echo - ${message.message}")
     }
 
-//    @WebSocketHandlerMapping("message/own")
-//    suspend fun exampleWithOwnMessage(session: WebSocketSession, message: WebSocketMessage): String {
-//        /**
-//         * Do Something
-//         * */
-//
-//        return "ECHO - ${message.payloadAsText}"
-//    }
+    @WebSocketHandlerMapping("message/own")
+    suspend fun exampleWithOwnMessage(session: WebSocketSession, message: WebSocketMessage): String {
+        /**
+         * Do Something
+         * */
+
+        return "ECHO - ${message.payloadAsText}"
+    }
 
 }
 
